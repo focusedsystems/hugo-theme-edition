@@ -23,7 +23,7 @@
 
 </div>
 
-{{ partial "search.html" . }}
+{{ if ne .Site.Params.search false }}{{ partial "search.html" . }}{{ end }}
 {{ partial "analytics.html" . }}
 {{- $themejs := resources.Get "built/theme.js" | minify | fingerprint }}
 <script src="{{ $themejs.RelPermalink }}" integrity="{{ $themejs.Data.Integrity }}"></script>

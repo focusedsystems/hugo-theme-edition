@@ -29,7 +29,14 @@
         </nav>
 
         <div class="gh-head-actions">
+            {{- if ne .Site.Params.search false }}
             <button class="gh-search" data-search-open aria-label="Search">{{ partial "icons/search.html" . }}</button>
+            {{- end }}
+            {{- if eq $.Site.Params.subscribe_popover false }}
+            {{- with .Site.Params.subscribe_url }}
+            <a class="gh-head-btn gh-btn gh-primary-btn" href="{{ . }}">Subscribe</a>
+            {{- end }}
+            {{- else }}
             {{- with .Site.Params.subscribe_url }}
             <div class="subscribe-popover-wrap" data-subscribe-popover>
                 <a class="gh-head-btn gh-btn gh-primary-btn" href="{{ . }}" data-subscribe-toggle aria-haspopup="dialog" aria-expanded="false">Subscribe</a>
@@ -38,6 +45,7 @@
                     {{ partial "subscribe-form.html" $ }}
                 </div>
             </div>
+            {{- end }}
             {{- end }}
         </div>
     </div>
