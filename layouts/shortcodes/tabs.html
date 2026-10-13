@@ -1,0 +1,17 @@
+{{- /* {{< tabs items="macOS,Windows" defaultIndex="0" >}}
+         {{< tab >}} … {{< /tab >}}
+         {{< tab >}} … {{< /tab >}}
+       {{< /tabs >}} */ -}}
+{{- $items := split (.Get "items") "," -}}
+{{- $default := int ((.Get "defaultIndex") | default "0") -}}
+{{- if not (.Get "items") }}{{ errorf "tabs: items=\"A,B\" is required (%s)" .Position }}{{ end -}}
+<div class="sc-tabs">
+  <div class="sc-tabs-nav" role="tablist">
+    {{- range $i, $item := $items }}
+    <button class="sc-tab-toggle{{ if eq $i $default }} is-selected{{ end }}" type="button" role="tab" data-tab-index="{{ $i }}">{{ trim $item " " }}</button>
+    {{- end }}
+  </div>
+  <div class="sc-tabs-panels">
+    {{- .Inner -}}
+  </div>
+</div>

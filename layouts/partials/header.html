@@ -1,0 +1,44 @@
+<header id="gh-head" class="gh-head gh-outer">
+    <div class="gh-head-inner">
+        <div class="gh-head-brand">
+            <div class="gh-head-brand-wrapper">
+                <a class="gh-head-logo" href="{{ .Site.Home.RelPermalink }}">
+                    {{- with .Site.Params.logo }}<img src="{{ . }}" alt="{{ $.Site.Title }}">{{ else }}{{ $.Site.Title }}{{ end -}}
+                </a>
+            </div>
+            <button class="gh-burger" aria-label="Menu"></button>
+        </div>
+
+        <nav class="gh-head-menu">
+            <ul class="nav">
+                {{- range .Site.Menus.main }}
+                {{- if .HasChildren }}
+                <li class="nav-{{ .Name | urlize }} nav-has-children">
+                    <button class="nav-parent-toggle" type="button" aria-haspopup="true">{{ .Name }} {{ partial "icons/caret-down.html" . }}</button>
+                    <ul class="gh-dropdown">
+                        {{- range .Children }}
+                        <li><a href="{{ .URL | relLangURL }}">{{ .Name }}</a></li>
+                        {{- end }}
+                    </ul>
+                </li>
+                {{- else }}
+                <li class="nav-{{ .Name | urlize }}"><a href="{{ .URL | relLangURL }}">{{ .Name }}</a></li>
+                {{- end }}
+                {{- end }}
+            </ul>
+        </nav>
+
+        <div class="gh-head-actions">
+            <button class="gh-search" data-search-open aria-label="Search">{{ partial "icons/search.html" . }}</button>
+            {{- with .Site.Params.subscribe_url }}
+            <div class="subscribe-popover-wrap" data-subscribe-popover>
+                <a class="gh-head-btn gh-btn gh-primary-btn" href="{{ . }}" data-subscribe-toggle aria-haspopup="dialog" aria-expanded="false">Subscribe</a>
+                <div class="subscribe-popover" data-subscribe-panel hidden role="dialog" aria-label="Subscribe to the newsletter">
+                    <p class="subscribe-popover-note">{{ $.Site.Params.description }}</p>
+                    {{ partial "subscribe-form.html" $ }}
+                </div>
+            </div>
+            {{- end }}
+        </div>
+    </div>
+</header>

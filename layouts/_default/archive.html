@@ -1,0 +1,30 @@
+{{ define "main" }}
+<main class="site-main">
+    <header class="feed-header gh-canvas">
+        <div class="feed-header-wrapper">
+            <h2 class="feed-header-title">{{ .Title }}</h2>
+            {{- with .Content }}<div class="feed-header-description gh-content">{{ . }}</div>{{ end }}
+        </div>
+    </header>
+
+    <div class="archive gh-canvas">
+        {{- $posts := where .Site.RegularPages "Section" "posts" }}
+        {{- range $posts.GroupByDate "2006" }}
+        <section class="archive-year">
+            <h3 class="archive-year-title">{{ .Key }}</h3>
+            <ul class="archive-list">
+                {{- range .Pages }}
+                {{- $link := .Params.link }}
+                <li class="archive-item">
+                    <time class="archive-date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 Jan" }}</time>
+                    {{- with .Params.label }}<span class="post-label" data-label="{{ . | lower }}">{{ . }}</span>{{ end }}
+                    {{- if $link }}<span class="post-label" data-label="link">Link</span>{{ end }}
+                    <a class="archive-link" href="{{ .RelPermalink }}">{{ .Title }}</a>
+                </li>
+                {{- end }}
+            </ul>
+        </section>
+        {{- end }}
+    </div>
+</main>
+{{ end }}

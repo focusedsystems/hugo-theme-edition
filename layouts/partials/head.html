@@ -1,0 +1,59 @@
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#16181d" media="(prefers-color-scheme: dark)">
+
+    {{- $title := .Title -}}
+    {{- if .IsHome }}{{ $title = .Site.Title }}{{ else }}{{ $title = printf "%s — %s" .Title .Site.Title }}{{ end -}}
+    <title>{{ $title }}</title>
+
+    {{- $desc := .Description | default .Summary | default .Site.Params.description -}}
+    <meta name="description" content="{{ $desc }}">
+    <link rel="canonical" href="{{ .Permalink }}">
+
+    <meta property="og:site_name" content="{{ .Site.Title }}">
+    <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+    <meta property="og:title" content="{{ $title }}">
+    <meta property="og:description" content="{{ $desc }}">
+    <meta property="og:url" content="{{ .Permalink }}">
+    {{- $ogimg := .Params.feature_image | default .Site.Params.og_image }}
+    {{- with $ogimg }}<meta property="og:image" content="{{ . | absURL }}">{{ end }}
+    <meta name="twitter:card" content="summary_large_image">
+
+    {{- with .Site.Params.favicon }}<link rel="icon" href="{{ . | relURL }}">{{ end }}
+    {{- $screen := resources.Get "built/screen.css" | minify | fingerprint }}
+    <link rel="stylesheet" href="{{ $screen.RelPermalink }}" integrity="{{ $screen.Data.Integrity }}">
+    {{- $shortcodes := resources.Get "built/shortcodes.css" | minify | fingerprint }}
+    <link rel="stylesheet" href="{{ $shortcodes.RelPermalink }}" integrity="{{ $shortcodes.Data.Integrity }}">
+    {{- with resources.Get "css/series.css" }}
+    {{- $series := . | minify | fingerprint }}
+    <link rel="stylesheet" href="{{ $series.RelPermalink }}" integrity="{{ $series.Data.Integrity }}">
+    {{- end }}
+    {{- if eq .Layout "edit" }}
+    {{- with resources.Get "css/editor.css" }}
+    {{- $editor := . | minify | fingerprint }}
+    <link rel="stylesheet" href="{{ $editor.RelPermalink }}" integrity="{{ $editor.Data.Integrity }}">
+    {{- end }}
+    {{- end }}
+    {{- if eq .Layout "dashboard" }}
+    {{- with resources.Get "css/dashboard.css" }}
+    {{- $dashboard := . | minify | fingerprint }}
+    <link rel="stylesheet" href="{{ $dashboard.RelPermalink }}" integrity="{{ $dashboard.Data.Integrity }}">
+    {{- end }}
+    {{- end }}
+    {{- if in (slice "edit" "dashboard") .Layout }}<meta name="robots" content="noindex, nofollow">{{ end }}
+    {{- with .Site.Params.accent_color }}
+    <style>:root { --ghost-accent-color: {{ . }}; }</style>
+    {{- end }}
+    {{- with .Site.Params.logo_height }}
+    <style>.gh-head-logo img{max-height:{{ . }} !important}</style>
+    {{- end }}
+
+    {{- range .AlternativeOutputFormats }}
+    <link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink }}" title="{{ $.Site.Title }}">
+    {{- end }}
+
+    {{ hugo.Generator }}
+</head>

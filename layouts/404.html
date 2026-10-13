@@ -1,0 +1,11 @@
+{{ define "main" }}
+<main class="site-main">
+    <section class="error-content gh-canvas">
+        <div class="error-message">
+            <h1 class="error-code">404</h1>
+            <p class="error-description">That page doesn't exist.</p>
+            <a class="error-link" href="{{ .Site.Home.RelPermalink }}">Go to the front page &rarr;</a>
+        </div>
+    </section>
+</main>
+{{ end }}

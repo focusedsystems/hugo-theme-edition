@@ -1,0 +1,5 @@
+{{- /* {{< cards cols="3" >}} {{< card … >}} … {{< /cards >}} */ -}}
+{{- $cols := .Get "cols" | default 3 -}}
+<div class="sc-cards" style="--sc-cards-cols: {{ $cols }};">
+  {{- .Inner -}}
+</div>

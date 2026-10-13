@@ -1,0 +1,99 @@
+{{ define "main" }}
+<main class="site-main">
+
+    <article class="single post" data-pagefind-body>
+
+        <header class="single-header gh-canvas">
+            <div class="single-meta">
+                <span class="single-meta-item single-meta-date">
+                    <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 January 2006" }}</time>
+                </span>
+                {{- if .ReadingTime }}
+                <span class="single-meta-item single-meta-length">{{ .ReadingTime }} min read</span>
+                {{- end }}
+                {{- with .Params.tags }}
+                <span class="single-meta-item single-meta-tag">
+                    <a class="post-tag post-tag-{{ index . 0 | urlize }}" href="{{ (printf "/tags/%s/" (index . 0 | urlize)) | relLangURL }}">{{ index . 0 }}</a>
+                </span>
+                {{- end }}
+            </div>
+
+            {{- $link := .Params.link -}}
+            {{- $label := .Params.label -}}
+            {{- if $link }}{{ $label = "Link" }}{{ end -}}
+            {{- with $label }}<span class="post-label" data-label="{{ . | lower }}">{{ . }}</span>{{ end }}
+
+            <h1 class="single-title">{{ .Title }}</h1>
+
+            {{- with .Params.custom_excerpt }}
+            <div class="single-excerpt">{{ . }}</div>
+            {{- end }}
+
+            {{- with $link }}
+            <a class="single-source-link" href="{{ . }}" target="_blank" rel="noopener noreferrer">Read the original {{ $.Site.Params.link_glyph | default "★" }}</a>
+            {{- end }}
+
+            {{- with .Params.feature_image }}
+            <figure class="single-media kg-width-wide">
+                <img src="{{ . }}" alt="{{ with $.Params.feature_image_alt }}{{ . }}{{ else }}{{ $.Title }}{{ end }}">
+                {{- with $.Params.feature_image_caption }}<figcaption>{{ . | safeHTML }}</figcaption>{{ end }}
+            </figure>
+            {{- end }}
+        </header>
+
+        {{ partial "series-nav.html" . }}
+
+        <div class="single-content gh-content gh-canvas">
+            {{ .Content }}
+        </div>
+
+        <div class="gh-canvas single-edit">
+            {{- if and .Site.Params.show_edit_link .Site.Params.github_repo .File }}
+            <a class="single-edit-link" href="https://github.com/{{ .Site.Params.github_repo }}/edit/{{ .Site.Params.edit_branch | default "main" }}/content/{{ .File.Path }}" target="_blank" rel="noopener noreferrer">✎ Edit on GitHub →</a>
+            {{- end }}
+            {{- if .Site.Params.editbranch }}
+            <a class="single-edit-link" href="/edit/?slug={{ .File.ContentBaseName | default (path.Base .File.Dir) }}">✎ Edit this post →</a>
+            {{- end }}
+            <div class="typo-report" data-typo>
+                <button class="typo-toggle" type="button" data-typo-open aria-expanded="false" aria-haspopup="dialog">Report a typo</button>
+                <form class="typo-popover" data-typo-form hidden role="dialog" aria-label="Report a typo">
+                    <p class="typo-popover-note">This files an issue on the blog's GitHub repo — the whole site lives in version control. Yes, it's that geeky. Anything you highlighted on the page is attached automatically.</p>
+                    <input type="hidden" name="title" value="{{ .Title }}">
+                    <textarea name="note" rows="3" placeholder="What's wrong?" required></textarea>
+                    <div class="typo-form-row">
+                        <input type="email" name="email" placeholder="Email (optional)">
+                        <button type="submit" class="typo-submit">Send</button>
+                    </div>
+                    <p class="typo-status" data-typo-status hidden></p>
+                </form>
+            </div>
+        </div>
+
+        <div class="gh-canvas">
+        <footer class="single-footer">
+            <div class="single-footer-left">
+                {{- with .PrevInSection }}
+                <div class="navigation navigation-previous">
+                    <a class="navigation-link" href="{{ .RelPermalink }}" aria-label="Previous post">
+                        <span class="navigation-icon">{{ partial "icons/arrow-left.html" . }}</span>
+                    </a>
+                </div>
+                {{- end }}
+            </div>
+            <div class="single-footer-middle"></div>
+            <div class="single-footer-right">
+                {{- with .NextInSection }}
+                <div class="navigation navigation-next">
+                    <a class="navigation-link" href="{{ .RelPermalink }}" aria-label="Next post">
+                        <span class="navigation-icon">{{ partial "icons/arrow-right.html" . }}</span>
+                    </a>
+                </div>
+                {{- end }}
+            </div>
+        </footer>
+        </div>
+
+    </article>
+
+</main>
+{{ end }}

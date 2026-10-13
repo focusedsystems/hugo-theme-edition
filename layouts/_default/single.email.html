@@ -1,0 +1,78 @@
+{{- $accent := .Site.Params.accent_color | default "#EE8C05" -}}
+{{- $author := "" -}}{{ with .Params.authors }}{{ $author = index . 0 }}{{ else }}{{ $author = $.Site.Params.author }}{{ end -}}
+{{- /* Absolutise root-relative links/images so they work in email clients. */ -}}
+{{- $content := .Content | replaceRE "(href|src)=\"/" (printf "${1}=\"%s" .Site.BaseURL) -}}
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.Locale | default "en" }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>{{ .Title }}</title>
+<style>
+  body { margin:0; padding:0; background:#ffffff; }
+  .email-wrap { max-width:600px; margin:0 auto; padding:32px 24px 48px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    color:#15171a; font-size:17px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+  .email-head { text-align:center; padding-bottom:28px; }
+  .email-head img { height:44px; width:auto; }
+  .email-brand { font-weight:800; letter-spacing:0.08em; font-size:14px; margin-top:10px; text-transform:uppercase; }
+  .email-title { font-size:30px; line-height:1.2; font-weight:800; margin:8px 0 10px; }
+  .email-meta { color:#738a94; font-size:14px; margin-bottom:28px; }
+  .email-meta a { color:{{ $accent }}; text-decoration:none; }
+  .email-content > :first-child { margin-top:0; }
+  .email-content p { margin:0 0 20px; }
+  .email-content h2 { font-size:23px; font-weight:800; margin:36px 0 12px; line-height:1.25; }
+  .email-content h3 { font-size:19px; font-weight:700; margin:28px 0 10px; }
+  .email-content a { color:{{ $accent }}; }
+  .email-content img { max-width:100%; height:auto; border-radius:8px; }
+  .email-content ul, .email-content ol { margin:0 0 20px; padding-left:24px; }
+  .email-content li { margin:6px 0; }
+  .email-content blockquote { margin:0 0 20px; padding:4px 0 4px 18px; border-left:3px solid {{ $accent }}; color:#5c6670; }
+  .email-content code { background:#f1f1f0; color:#15171a; padding:2px 6px; border-radius:4px; font-size:0.88em;
+    font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace; }
+  .email-content pre { background:#15171a; color:#e6e6e6; padding:18px 20px; border-radius:10px; margin:0 0 24px;
+    font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    font-size:13.5px; line-height:1.55;
+    white-space:pre-wrap; word-break:break-word; overflow-wrap:anywhere; }
+  .email-content pre code { background:transparent; color:#e6e6e6; padding:0; font-size:inherit; white-space:inherit; }
+  .email-foot { border-top:1px solid #e5e5e5; margin-top:40px; padding-top:24px; color:#738a94; font-size:13px; line-height:1.6; text-align:center; }
+  .email-foot a { color:#738a94; }
+  .email-social { margin-bottom:14px; }
+  .email-social a { color:#738a94; text-decoration:none; font-weight:600; }
+</style>
+</head>
+<body>
+  <div class="email-wrap">
+
+    <div class="email-head">
+      <a href="{{ .Site.Home.Permalink }}"><img src="{{ .Site.Params.email_logo | default ((.Site.Params.logo | default "/images/logo.png") | absURL) }}" alt="{{ .Site.Title }}"></a>
+      <div class="email-brand">{{ .Site.Title }}</div>
+    </div>
+
+    <h1 class="email-title">{{ .Title }}</h1>
+    <div class="email-meta">
+      By {{ $author }} &bull; {{ .Date.Format "2 Jan 2006" }}
+      &nbsp;&middot;&nbsp; <a href="{{ .Permalink }}">View in browser</a>
+    </div>
+
+    <div class="email-content">
+      {{ $content | safeHTML }}
+    </div>
+
+    <div class="email-foot">
+      {{- $social := where (.Site.Params.social | default slice) "url" "not in" (slice "/index.xml" "/subscribe/") }}
+      {{- with $social }}
+      <div class="email-social">
+        {{- range $i, $s := . }}{{ if hasPrefix $s.url "http" }}{{ if $i }} &middot; {{ end }}<a href="{{ $s.url }}">{{ replaceRE "^Connect on " "" $s.name }}</a>{{ end }}{{ end }}
+      </div>
+      {{- end }}
+      You're receiving this because you subscribed at
+      <a href="{{ .Site.Home.Permalink }}">blog.focused.systems</a>.<br>
+      <a {{ `href="{{{RESEND_UNSUBSCRIBE_URL}}}"` | safeHTMLAttr }}>Unsubscribe</a>
+      &nbsp;&middot;&nbsp; {{ .Site.Title }} &copy; {{ now.Format "2006" }}
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{{- $social := .Site.Params.social }}
+<footer class="gh-foot{{ if not $social }} no-menu{{ end }} gh-outer">
+    <div class="gh-foot-inner gh-inner">
+        <div class="gh-copyright">
+            {{ .Site.Title }} &copy; {{ now.Format "2006" }}
+        </div>
+        {{- with $social }}
+        <nav class="gh-foot-menu">
+            <ul class="nav">
+                {{- range . }}
+                <li><a href="{{ .url | relLangURL }}"{{ if hasPrefix .url "http" }} target="_blank" rel="noopener"{{ end }}>{{ .name }}</a></li>
+                {{- end }}
+            </ul>
+        </nav>
+        {{- end }}
+        <div class="gh-powered-by">
+            <a href="https://gohugo.io/" target="_blank" rel="noopener">Built with Hugo</a>
+        </div>
+    </div>
+</footer>

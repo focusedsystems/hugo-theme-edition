@@ -1,0 +1,17 @@
+{{- /* {{< card link="/posts/x" title="Title" subtitle="…" icon="🚀" image="/images/x.png" tag="new" >}}
+       Self-contained port (no Hugo image-processing dependency — pass a ready image path). */ -}}
+{{- $link := .Get "link" -}}
+{{- $title := .Get "title" -}}
+{{- $subtitle := .Get "subtitle" -}}
+{{- $icon := .Get "icon" -}}
+{{- $image := .Get "image" -}}
+{{- $tag := .Get "tag" -}}
+<{{ if $link }}a href="{{ $link | relLangURL }}"{{ else }}div{{ end }} class="sc-card">
+  {{- with $image }}
+  <div class="sc-card-image"><img src="{{ . | relLangURL }}" alt="{{ $title }}" loading="lazy"></div>
+  {{- end }}
+  <div class="sc-card-body">
+    <div class="sc-card-title">{{ with $icon }}<span class="sc-card-icon" aria-hidden="true">{{ . }}</span> {{ end }}{{ $title }}{{ with $tag }}<span class="sc-card-tag">{{ . }}</span>{{ end }}</div>
+    {{- with $subtitle }}<div class="sc-card-subtitle">{{ . | markdownify }}</div>{{ end }}
+  </div>
+</{{ if $link }}a{{ else }}div{{ end }}>

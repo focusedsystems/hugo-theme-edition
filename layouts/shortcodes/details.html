@@ -1,0 +1,9 @@
+{{- /* {{< details title="More" closed="true" >}} … {{< /details >}} */ -}}
+{{- $title := .Get "title" | default "Details" -}}
+{{- $closed := eq (.Get "closed") "true" -}}
+<details class="sc-details"{{ if not $closed }} open{{ end }}>
+  <summary class="sc-details-summary">{{ $title | markdownify }}</summary>
+  <div class="sc-details-body">
+    {{ .InnerDeindent | markdownify }}
+  </div>
+</details>

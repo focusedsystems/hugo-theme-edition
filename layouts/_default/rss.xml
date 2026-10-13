@@ -1,0 +1,41 @@
+{{- /* Full-content RSS (Ghost-style <content:encoded>) so readers and
+       RSS-to-email newsletters get the whole post, not just a summary. */ -}}
+{{- $pages := .RegularPages -}}
+{{- if .IsHome }}{{ $pages = where .Site.RegularPages "Section" "posts" }}{{ end -}}
+{{- $limit := .Site.Config.Services.RSS.Limit -}}
+{{- if ge $limit 1 }}{{ $pages = $pages | first $limit }}{{ end -}}
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>{{ .Site.Title }}</title>
+    <link>{{ .Site.BaseURL }}</link>
+    <description>{{ .Site.Params.description }}</description>
+    <language>{{ .Site.Language.Locale }}</language>
+    <generator>Hugo</generator>
+    {{- with .Site.Params.og_image }}<image><url>{{ . | absURL }}</url><title>{{ $.Site.Title }}</title><link>{{ $.Site.BaseURL }}</link></image>{{ end }}
+    {{- if gt (len $pages) 0 }}<lastBuildDate>{{ (index $pages 0).Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</lastBuildDate>{{ end }}
+    <atom:link href="{{ .Permalink }}index.xml" rel="self" type="application/rss+xml" />
+    {{- range $pages }}
+    {{- $link := .Params.link }}
+    <item>
+      <title>{{ .Title }}</title>
+      {{- if $link }}
+      <link>{{ $link }}</link>
+      <guid isPermaLink="false">{{ .Permalink }}</guid>
+      {{- else }}
+      <link>{{ .Permalink }}</link>
+      <guid isPermaLink="true">{{ .Permalink }}</guid>
+      {{- end }}
+      <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
+      {{- range .Params.authors }}<dc:creator>{{ . }}</dc:creator>{{ end }}
+      {{- range .Params.tags }}<category>{{ . }}</category>{{ end }}
+      <description>{{ .Description | default .Summary | transform.XMLEscape | safeHTML }}</description>
+      {{- if $link }}
+      <content:encoded>{{ printf "<![CDATA[%s<p>★ <a href=\"%s\">Permalink</a></p>]]>" .Content .Permalink | safeHTML }}</content:encoded>
+      {{- else }}
+      <content:encoded>{{ printf "<![CDATA[%s]]>" .Content | safeHTML }}</content:encoded>
+      {{- end }}
+    </item>
+    {{- end }}
+  </channel>
+</rss>

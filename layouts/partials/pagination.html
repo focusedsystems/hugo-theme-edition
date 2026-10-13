@@ -1,0 +1,13 @@
+{{- /* Context is a Paginator (passed explicitly from list/index). */ -}}
+{{- $p := . -}}
+{{- if gt $p.TotalPages 1 }}
+<nav class="pagination" role="navigation">
+    {{- if $p.HasPrev }}
+    <a class="newer-posts" href="{{ $p.Prev.URL }}">&larr; Newer posts</a>
+    {{- end }}
+    <span class="page-number">Page {{ $p.PageNumber }} of {{ $p.TotalPages }}</span>
+    {{- if $p.HasNext }}
+    <a class="older-posts" href="{{ $p.Next.URL }}">Older posts &rarr;</a>
+    {{- end }}
+</nav>
+{{- end }}

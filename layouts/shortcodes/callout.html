@@ -1,0 +1,11 @@
+{{- /* {{< callout type="info|warning|error" emoji="💡" >}} … {{< /callout >}}
+       Self-contained port of Hextra's callout (same params, no Tailwind/Hextra deps). */ -}}
+{{- $type := .Get "type" | default "default" -}}
+{{- $emojiDict := dict "default" "💡" "info" "ℹ️" "warning" "⚠️" "error" "🚫" -}}
+{{- $emoji := .Get "emoji" | default (index $emojiDict $type) -}}
+<div class="sc-callout sc-callout-{{ $type }}">
+  {{- with $emoji }}<div class="sc-callout-icon" aria-hidden="true">{{ . }}</div>{{ end }}
+  <div class="sc-callout-body">
+    {{ .InnerDeindent | markdownify }}
+  </div>
+</div>

@@ -1,0 +1,22 @@
+{{- /* Provider-agnostic analytics. All off unless a param is set in hugo.yaml.
+       Pick ONE (or none). All are cookieless / privacy-friendly. */ -}}
+{{- with .Site.Params.analytics }}
+  {{- /* Cloudflare Web Analytics — free, no cookies, zero extra infra (you're
+         already on Cloudflare). Set: analytics.cloudflare_token */ -}}
+  {{- with .cloudflare_token }}
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "{{ . }}"}'></script>
+  {{- end }}
+  {{- /* Plausible — hosted or self-hosted. Set: analytics.plausible_domain
+         (and optionally analytics.plausible_src for a self-hosted script). */ -}}
+  {{- with .plausible_domain }}
+  <script defer data-domain="{{ . }}" src="{{ $.Site.Params.analytics.plausible_src | default "https://plausible.io/js/script.js" }}"></script>
+  {{- end }}
+  {{- /* Umami — self-hosted, open source. Set: analytics.umami_src + analytics.umami_id */ -}}
+  {{- if and .umami_src .umami_id }}
+  <script defer src="{{ .umami_src }}" data-website-id="{{ .umami_id }}"></script>
+  {{- end }}
+  {{- /* GoatCounter — free for personal, tiny. Set: analytics.goatcounter */ -}}
+  {{- with .goatcounter }}
+  <script data-goatcounter="{{ . }}" async src="//gc.zgo.at/count.js"></script>
+  {{- end }}
+{{- end }}

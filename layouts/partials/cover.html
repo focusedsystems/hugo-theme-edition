@@ -1,0 +1,14 @@
+{{- /* Edition hero/cover (no-image variant): tagline + subscribe form. */ -}}
+<div class="cover gh-outer">
+    <div class="cover-content">
+        {{- with .Site.Params.description }}
+        <div class="cover-description">{{ . }}</div>
+        {{- end }}
+
+        {{ partial "subscribe-form.html" . }}
+    </div>
+
+    <a class="button-icon cover-arrow" href="#gh-feed" aria-label="Scroll to posts">
+        {{ partial "icons/caret-down.html" . }}
+    </a>
+</div>

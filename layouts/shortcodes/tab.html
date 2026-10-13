@@ -1,0 +1,5 @@
+{{- /* Child of {{< tabs >}}. Panel index follows source order. */ -}}
+{{- $default := int ((.Parent.Get "defaultIndex") | default "0") -}}
+<div class="sc-tab-panel{{ if eq .Ordinal $default }} is-selected{{ end }}" role="tabpanel" data-tab-index="{{ .Ordinal }}">
+  {{- .InnerDeindent | markdownify -}}
+</div>

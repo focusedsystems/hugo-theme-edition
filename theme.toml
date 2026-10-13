@@ -1,0 +1,10 @@
+name = "Edition (Hugo port)"
+license = "MIT"
+licenselink = "https://github.com/TryGhost/Edition/blob/main/LICENSE"
+description = "Hugo port of Ghost's Edition theme — a clean, minimal, calendar-feed publication theme. Ported from the official Edition v1.0.0 source for blog.focused.systems."
+homepage = "https://blog.focused.systems/"
+min_version = "0.146.0"
+
+[author]
+  name = "Rod Christiansen (port); Ghost Foundation (original Edition theme)"
+  homepage = "https://blog.focused.systems/"

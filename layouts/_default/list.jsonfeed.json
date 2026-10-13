@@ -1,0 +1,30 @@
+{{- /* JSON Feed 1.1 — https://jsonfeed.org/version/1.1 */ -}}
+{{- $pages := where .Site.RegularPages "Section" "posts" -}}
+{{- $limit := .Site.Config.Services.RSS.Limit -}}
+{{- if ge $limit 1 }}{{ $pages = $pages | first $limit }}{{ end -}}
+{{- $items := slice -}}
+{{- range $pages -}}
+  {{- $url := .Permalink -}}
+  {{- $external := .Params.link -}}
+  {{- $item := dict
+      "id" .Permalink
+      "url" $url
+      "title" .Title
+      "content_html" .Content
+      "date_published" (.Date.Format "2006-01-02T15:04:05Z07:00")
+      "tags" (.Params.tags | default slice)
+      "authors" (slice (dict "name" (.Site.Params.author)))
+  -}}
+  {{- with .Description | default .Summary }}{{ $item = merge $item (dict "summary" .) }}{{ end -}}
+  {{- with $external }}{{ $item = merge $item (dict "external_url" .) }}{{ end -}}
+  {{- $items = $items | append $item -}}
+{{- end -}}
+{{- $feed := dict
+    "version" "https://jsonfeed.org/version/1.1"
+    "title" .Site.Title
+    "home_page_url" .Site.BaseURL
+    "feed_url" (printf "%sfeed.json" .Site.BaseURL)
+    "description" .Site.Params.description
+    "items" $items
+-}}
+{{- $feed | jsonify (dict "indent" "  ") -}}

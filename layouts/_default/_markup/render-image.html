@@ -1,0 +1,26 @@
+{{- /* Image render hook.
+
+  Page-bundle images (co-located in content/posts/<slug>/) are processed:
+  resized into a responsive srcset + WebP, lazy-loaded, and wrapped in Ghost's
+  kg-image-card DOM so Edition's screen.css styles them unchanged.
+
+  External / non-resource URLs fall through to a plain lazy <img>.
+*/ -}}
+{{- $alt := .PlainText | default .Text -}}
+{{- $title := .Title -}}
+{{- $res := "" -}}
+{{- with .Page.Resources.GetMatch .Destination }}{{ $res = . }}{{ end -}}
+<figure class="kg-card kg-image-card{{ with $title }} kg-card-hascaption{{ end }}">
+{{- if and $res (in (slice "image/jpeg" "image/png" "image/webp" "image/tiff") $res.MediaType.Type) }}
+  {{- $small := $res.Resize "720x webp q82" -}}
+  {{- $large := $res.Resize "1200x webp q82" -}}
+  <img class="kg-image" src="{{ $large.RelPermalink }}"
+       srcset="{{ $small.RelPermalink }} 720w, {{ $large.RelPermalink }} 1200w"
+       sizes="(min-width: 720px) 720px, 100vw"
+       width="{{ $large.Width }}" height="{{ $large.Height }}"
+       alt="{{ $alt }}" loading="lazy" decoding="async">
+{{- else }}
+  <img class="kg-image" src="{{ .Destination | safeURL }}" alt="{{ $alt }}" loading="lazy" decoding="async">
+{{- end }}
+{{- with $title }}<figcaption>{{ . | safeHTML }}</figcaption>{{ end }}
+</figure>

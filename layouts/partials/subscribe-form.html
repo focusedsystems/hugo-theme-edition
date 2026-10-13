@@ -1,0 +1,12 @@
+{{- /* Subscribe form → Cloudflare Pages Function (/api/subscribe) which adds the
+       contact to a Resend Audience server-side. Endpoint is configurable. */ -}}
+{{- $endpoint := "/api/subscribe" -}}
+{{- with .Site.Params.newsletter }}{{ with .endpoint }}{{ $endpoint = . }}{{ end }}{{ end -}}
+<form class="form-wrapper cover-form" action="{{ $endpoint }}" method="post" data-subscribe>
+    <input class="auth-email" type="email" name="email" placeholder="Your email address" required>
+    <button class="form-button" type="submit" aria-label="Submit">
+        <span class="default">Subscribe</span>
+        <span class="success">Email sent</span>
+    </button>
+</form>
+<p class="cover-form-note" data-subscribe-note hidden>Thanks — you're on the list.</p>

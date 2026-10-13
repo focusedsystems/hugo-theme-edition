@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.Locale | default "en" }}">
+{{ partial "head.html" . }}
+{{- $bodyClass := "home-template" -}}
+{{- if not .IsHome }}{{ $bodyClass = printf "%s-template" .Kind }}{{ end -}}
+{{- $nav := .Site.Params.nav_layout | default "left" -}}
+{{- $headClass := "is-head-left-logo" -}}
+{{- if eq $nav "middle" }}{{ $headClass = "is-head-middle-logo" }}{{ else if eq $nav "stacked" }}{{ $headClass = "is-head-stacked" }}{{ end -}}
+{{- if eq .Site.Params.title_font "serif" }}{{ $headClass = printf "%s has-serif-title" $headClass }}{{ end -}}
+{{- if eq .Site.Params.body_font "serif" }}{{ $headClass = printf "%s has-serif-body" $headClass }}{{ end -}}
+<body class="{{ $bodyClass }} {{ $headClass }}">
+<div class="site">
+
+    {{ partial "header.html" . }}
+
+    {{ if and .IsHome .Site.Params.show_cover }}{{ partial "cover.html" . }}{{ end }}
+
+    <div class="site-content">
+        {{ block "main" . }}{{ end }}
+    </div>
+
+    {{ partial "footer.html" . }}
+
+</div>
+
+{{ partial "search.html" . }}
+{{ partial "analytics.html" . }}
+{{- $themejs := resources.Get "built/theme.js" | minify | fingerprint }}
+<script src="{{ $themejs.RelPermalink }}" integrity="{{ $themejs.Data.Integrity }}"></script>
+</body>
+</html>

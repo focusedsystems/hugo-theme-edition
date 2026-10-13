@@ -1,0 +1,14 @@
+{{ define "main" }}
+<main class="site-main">
+    <article class="single page">
+        <header class="single-header gh-canvas">
+            <h1 class="single-title">{{ .Title }}</h1>
+            {{- with .Params.description }}<div class="single-excerpt">{{ . }}</div>{{ end }}
+        </header>
+        <div class="single-content gh-content gh-canvas">
+            {{ .Content }}
+            {{ partial "subscribe-form.html" . }}
+        </div>
+    </article>
+</main>
+{{ end }}

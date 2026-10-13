@@ -1,0 +1,48 @@
+{{- /* Edition feed card with calendar block. Expects a Page as context.
+       Link posts (front-matter `link:`) render the title as an outbound link
+       with a glyph (Daring Fireball / Six Colors style); a small permalink
+       points at the commentary page. */ -}}
+{{- $link := .Params.link -}}
+{{- $label := .Params.label -}}
+{{- if $link }}{{ $label = "Link" }}{{ end -}}
+<article class="feed post{{ if $link }} feed-linkpost{{ end }}" data-month="{{ .Date.Format "January 2006" }}">
+
+    <div class="feed-calendar">
+        <div class="feed-calendar-month">{{ .Date.Format "Jan" }}</div>
+        <div class="feed-calendar-day">{{ .Date.Format "02" }}</div>
+    </div>
+
+    {{- with .Params.feature_image }}
+    <div class="feed-image u-placeholder rectangle">
+        <img class="u-object-fit" src="{{ . }}" alt="{{ $.Title }}" loading="lazy">
+    </div>
+    {{- end }}
+
+    <div class="feed-wrapper">
+        {{- with $label }}<span class="post-label" data-label="{{ . | lower }}">{{ . }}</span>{{ end }}
+        {{- if $link }}
+        <h2 class="feed-title"><a class="feed-link-out" href="{{ $link }}" target="_blank" rel="noopener noreferrer">{{ .Title }} <span class="link-glyph">{{ $.Site.Params.link_glyph | default "★" }}</span></a></h2>
+        {{- else }}
+        <h2 class="feed-title">{{ .Title }}</h2>
+        {{- end }}
+        {{- with (.Params.custom_excerpt | default .Description | default .Summary) }}
+        <div class="feed-excerpt">{{ . | truncate 160 }}</div>
+        {{- end }}
+        <div class="feed-right">
+            <time class="feed-date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 Jan 2006" }}</time>
+            {{- if .ReadingTime }}
+            <div class="feed-length">{{ .ReadingTime }} min read</div>
+            {{- end }}
+            {{- if $link }}
+            <a class="feed-permalink" href="{{ .RelPermalink }}">Permalink</a>
+            {{- else }}
+            <div class="feed-icon">{{ partial "icons/chevron-right.html" . }}</div>
+            {{- end }}
+        </div>
+    </div>
+
+    {{- if not $link }}
+    <a class="u-permalink" href="{{ .RelPermalink }}" aria-label="{{ .Title }}"></a>
+    {{- end }}
+
+</article>

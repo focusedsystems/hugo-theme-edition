@@ -1,0 +1,23 @@
+{{ define "main" }}
+<main class="site-main">
+
+    <header class="feed-header gh-canvas">
+        <div class="feed-header-wrapper">
+            <h2 class="feed-header-title">{{ if .IsHome }}{{ .Site.Params.feed_title }}{{ else }}{{ .Title }}{{ end }}</h2>
+            {{- with .Content }}<div class="feed-header-description gh-content">{{ . }}</div>{{ end }}
+        </div>
+    </header>
+
+    {{- $pages := .Pages }}
+    {{- if .IsHome }}{{ $pages = where .Site.RegularPages "Section" "posts" }}{{ end }}
+    {{- $paginator := .Paginate $pages }}
+    <div class="post-feed expanded gh-feed gh-canvas">
+        {{- range $paginator.Pages }}
+            {{ partial "post-card.html" . }}
+        {{- end }}
+    </div>
+
+    {{- partial "pagination.html" $paginator }}
+
+</main>
+{{ end }}
