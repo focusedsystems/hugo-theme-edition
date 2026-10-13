@@ -17,4 +17,6 @@ Site settings live under `params` in the site's own config: `accent_color`, `log
 - `subscribe_popover: false` makes Subscribe a plain link to `subscribe_url`, for a site that cannot post to the
   blog's own subscribe endpoint.
 
+A site can add its own styles in `assets/css/site.css`; the theme loads it after its own CSS when present.
+
 MIT licensed, as the original Edition theme is.
