@@ -31,6 +31,10 @@
     {{- $series := . | minify | fingerprint }}
     <link rel="stylesheet" href="{{ $series.RelPermalink }}" integrity="{{ $series.Data.Integrity }}">
     {{- end }}
+    {{- with resources.Get "css/site.css" }}
+    {{- $site := . | minify | fingerprint }}
+    <link rel="stylesheet" href="{{ $site.RelPermalink }}" integrity="{{ $site.Data.Integrity }}">
+    {{- end }}
     {{- if eq .Layout "edit" }}
     {{- with resources.Get "css/editor.css" }}
     {{- $editor := . | minify | fingerprint }}
